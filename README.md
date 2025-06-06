@@ -23,7 +23,7 @@ A comprehensive application for collecting and managing user feedback, built wit
 
 ### Bonus Features
 - Card animations (Framer Motion)
-- Drag-and-drop sorting (@dnd-kit) - *under development*
+- Drag-and-drop sorting (@dnd-kit)
 - Weekly activity statistics
 - Data export/import (JSON format)
 
@@ -34,7 +34,7 @@ A comprehensive application for collecting and managing user feedback, built wit
 - **Tailwind CSS 4** - Utility-first styling
 - **Zustand** - State management
 - **Framer Motion** - Animations
-- **@dnd-kit** - Drag and drop *(planned)*
+- **@dnd-kit** - Drag and drop
 - **Shadcn/ui** - UI component library
 - **date-fns** - Date manipulation
 
@@ -100,7 +100,7 @@ The application will be available at: http://localhost:3000
 ### Theme Switching
 - Toggle between light and dark themes using the theme button
 
-### Drag & Drop *(Under Development)*
+### Drag & Drop
 - Card reordering functionality is temporarily unavailable
 - Implementation planned for future releases
 

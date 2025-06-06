@@ -26,9 +26,10 @@ import { GripVertical } from 'lucide-react'
 
 interface SortableFeedbackItemProps {
   feedback: Feedback
+  isManualSort: boolean
 }
 
-function SortableFeedbackItem({ feedback }: SortableFeedbackItemProps) {
+function SortableFeedbackItem({ feedback, isManualSort }: SortableFeedbackItemProps) {
   const {
     attributes,
     listeners,
@@ -46,14 +47,16 @@ function SortableFeedbackItem({ feedback }: SortableFeedbackItemProps) {
 
   return (
     <div ref={setNodeRef} style={style} className="relative">
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute left-2 top-6 z-10 cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-      >
-        <GripVertical className="w-4 h-4 text-gray-400" />
-      </div>
-      <div className="pl-8">
+      {isManualSort && (
+        <div
+          {...attributes}
+          {...listeners}
+          className="absolute left-2 top-6 z-10 cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+        >
+          <GripVertical className="w-4 h-4 text-gray-400" />
+        </div>
+      )}
+      <div className={isManualSort ? "pl-8" : ""}>
         <FeedbackItem feedback={feedback} />
       </div>
     </div>
@@ -61,7 +64,7 @@ function SortableFeedbackItem({ feedback }: SortableFeedbackItemProps) {
 }
 
 export function FeedbackList() {
-  const { getFilteredAndSortedFeedbacks, updateFeedback } = useFeedbackStore()
+  const { getFilteredAndSortedFeedbacks, reorderFeedbacks, sortBy } = useFeedbackStore()
   const filteredFeedbacks = getFilteredAndSortedFeedbacks()
 
   const sensors = useSensors(
@@ -72,6 +75,8 @@ export function FeedbackList() {
   )
 
   const handleDragEnd = (event: DragEndEvent) => {
+    if (sortBy !== 'manual') return
+
     const { active, over } = event
 
     if (active.id !== over?.id) {
@@ -80,10 +85,8 @@ export function FeedbackList() {
 
       const newOrder = arrayMove(filteredFeedbacks, oldIndex, newIndex)
 
-      // Update the order in the store (simple approach - you might want to add an order field)
-      newOrder.forEach((feedback, index) => {
-        updateFeedback(feedback.id, { updatedAt: new Date(Date.now() + index) })
-      })
+      // Update the order in the store using the new reorderFeedbacks method
+      reorderFeedbacks(newOrder.map(feedback => feedback.id))
     }
   }
 
@@ -101,12 +104,33 @@ export function FeedbackList() {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext items={filteredFeedbacks.map(f => f.id)} strategy={verticalListSortingStrategy}>
+    <>
+      {sortBy === 'manual' ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={filteredFeedbacks.map(f => f.id)} strategy={verticalListSortingStrategy}>
+            <div className="space-y-4">
+              <AnimatePresence mode="popLayout">
+                {filteredFeedbacks.map((feedback) => (
+                  <motion.div
+                    key={feedback.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <SortableFeedbackItem feedback={feedback} isManualSort={true} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </SortableContext>
+        </DndContext>
+      ) : (
         <div className="space-y-4">
           <AnimatePresence mode="popLayout">
             {filteredFeedbacks.map((feedback) => (
@@ -118,12 +142,12 @@ export function FeedbackList() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
               >
-                <SortableFeedbackItem feedback={feedback} />
+                <SortableFeedbackItem feedback={feedback} isManualSort={false} />
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
-      </SortableContext>
-    </DndContext>
+      )}
+    </>
   )
 }

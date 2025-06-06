@@ -62,24 +62,6 @@ export function FeedbackControls() {
     input.click()
   }
 
-  const getSortLabel = (sort: SortBy) => {
-    switch (sort) {
-      case 'date': return 'По дате'
-      case 'popularity': return 'По популярности'
-      case 'category': return 'По категории'
-    }
-  }
-
-  const getCategoryLabel = (category: FeedbackCategory | 'all') => {
-    switch (category) {
-      case 'all': return 'Все категории'
-      case 'UI': return 'UI/UX'
-      case 'Performance': return 'Производительность'
-      case 'Feature': return 'Функциональность'
-      case 'Bug': return 'Исправление багов'
-    }
-  }
-
   return (
     <div className="space-y-4 mb-6">
       {/* Header with stats and theme toggle */}
@@ -149,6 +131,7 @@ export function FeedbackControls() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="manual">Ручная сортировка</SelectItem>
               <SelectItem value="date">По дате</SelectItem>
               <SelectItem value="popularity">По популярности</SelectItem>
               <SelectItem value="category">По категории</SelectItem>
@@ -205,4 +188,34 @@ export function FeedbackControls() {
       </div>
     </div>
   )
+}
+
+function getSortLabel(sortBy: SortBy): string {
+  switch (sortBy) {
+    case 'manual':
+      return 'Ручная сортировка'
+    case 'date':
+      return 'По дате'
+    case 'popularity':
+      return 'По популярности'
+    case 'category':
+      return 'По категории'
+    default:
+      return 'По дате'
+  }
+}
+
+function getCategoryLabel(category: FeedbackCategory): string {
+  switch (category) {
+    case 'UI':
+      return 'UI/UX'
+    case 'Performance':
+      return 'Производительность'
+    case 'Feature':
+      return 'Функциональность'
+    case 'Bug':
+      return 'Исправление багов'
+    default:
+      return category
+  }
 }

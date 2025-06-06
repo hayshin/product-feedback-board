@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist, devtools } from 'zustand/middleware'
 
 export type FeedbackCategory = 'UI' | 'Performance' | 'Feature' | 'Bug'
-export type SortBy = 'date' | 'popularity' | 'category'
+export type SortBy = 'date' | 'popularity' | 'category' | 'manual'
 export type Theme = 'light' | 'dark'
 
 export interface Feedback {
@@ -14,6 +14,7 @@ export interface Feedback {
   createdAt: Date
   updatedAt: Date
   userVote?: 'up' | 'down' | null
+  order: number
 }
 
 interface FeedbackStore {
@@ -25,10 +26,11 @@ interface FeedbackStore {
   isLoading: boolean
 
   // Actions
-  addFeedback: (feedback: Omit<Feedback, 'id' | 'votes' | 'createdAt' | 'updatedAt'>) => void
+  addFeedback: (feedback: Omit<Feedback, 'id' | 'votes' | 'createdAt' | 'updatedAt' | 'order'>) => void
   deleteFeedback: (id: string) => void
   updateFeedback: (id: string, updates: Partial<Feedback>) => void
   voteFeedback: (id: string, vote: 'up' | 'down') => void
+  reorderFeedbacks: (reorderedIds: string[]) => void
   setSortBy: (sortBy: SortBy) => void
   setFilterByCategory: (category: FeedbackCategory | 'all') => void
   setTheme: (theme: Theme) => void
@@ -48,13 +50,14 @@ export const useFeedbackStore = create<FeedbackStore>()(
       (set, get) => ({
         // Initial state
         feedbacks: [],
-        sortBy: 'date',
+        sortBy: 'manual',
         filterByCategory: 'all',
         theme: 'light',
         isLoading: false,
 
         // Actions
         addFeedback: (feedbackData) => {
+          const state = get()
           const newFeedback: Feedback = {
             ...feedbackData,
             id: crypto.randomUUID(),
@@ -62,6 +65,7 @@ export const useFeedbackStore = create<FeedbackStore>()(
             createdAt: new Date(),
             updatedAt: new Date(),
             userVote: null,
+            order: state.feedbacks.length, // Add to end
           }
           set((state) => ({
             feedbacks: [...state.feedbacks, newFeedback],
@@ -105,6 +109,25 @@ export const useFeedbackStore = create<FeedbackStore>()(
               }
             }),
           }))
+        },
+
+        reorderFeedbacks: (reorderedIds) => {
+          set((state) => {
+            const feedbackMap = new Map(state.feedbacks.map(f => [f.id, f]))
+            const reorderedFeedbacks = reorderedIds.map((id, index) => {
+              const feedback = feedbackMap.get(id)
+              return feedback ? { ...feedback, order: index } : null
+            }).filter(Boolean) as Feedback[]
+
+            // Add any remaining feedbacks that weren't in the reordered list
+            const remainingFeedbacks = state.feedbacks.filter(f => !reorderedIds.includes(f.id))
+            const maxOrder = reorderedFeedbacks.length
+            remainingFeedbacks.forEach((feedback, index) => {
+              reorderedFeedbacks.push({ ...feedback, order: maxOrder + index })
+            })
+
+            return { feedbacks: reorderedFeedbacks }
+          })
         },
 
         setSortBy: (sortBy) => set({ sortBy }),
@@ -157,11 +180,12 @@ export const useFeedbackStore = create<FeedbackStore>()(
             }
           ]
 
-          const feedbacksWithIds = sampleFeedbacks.map(feedback => ({
+          const feedbacksWithIds = sampleFeedbacks.map((feedback, index) => ({
             ...feedback,
             id: crypto.randomUUID(),
             createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // Random date within last week
             updatedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+            order: index,
           }))
 
           set({ feedbacks: feedbacksWithIds })
@@ -184,6 +208,8 @@ export const useFeedbackStore = create<FeedbackStore>()(
                 return b.votes - a.votes
               case 'category':
                 return a.category.localeCompare(b.category)
+              case 'manual':
+                return a.order - b.order
               case 'date':
               default:
                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
