@@ -1,143 +1,141 @@
-# 🎯 Product Feedback Board
+# Product Feedback Board
 
-Полнофункциональное приложение для сбора и управления отзывами пользователей, созданное на основе современных технологий React и Next.js.
+A comprehensive application for collecting and managing user feedback, built with modern React and Next.js technologies.
 
-## ✨ Возможности
+## Features
 
-### 🟢 Базовый уровень (useState)
-- ✅ Добавление предложений с формой
-- ✅ Список всех предложений
-- ✅ Удаление предложений
+### Basic Level (useState)
+- Add feedback with form validation
+- Display list of all feedback items
+- Delete feedback functionality
 
-### 🟡 Средний уровень (Zustand)
-- ✅ Подсчет общего количества фидбеков
-- ✅ Система голосования (лайк/дизлайк)
-- ✅ Фильтрация по популярности и дате
-- ✅ Сортировка по различным критериям
+### Intermediate Level (Zustand)
+- Total feedback count tracking
+- Voting system (upvote/downvote)
+- Filter by popularity and date
+- Sort by multiple criteria
 
-### 🔴 Продвинутый уровень (Zustand + расширения)
-- ✅ Редактирование фидбека в модальном окне
-- ✅ Поддержка категорий (UI, Performance, Feature, Bug)
-- ✅ Сохранение состояния в localStorage
-- ✅ Переключение темы (светлая/темная)
+### Advanced Level (Zustand + Extensions)
+- Edit feedback in modal dialog
+- Category support (UI, Performance, Feature, Bug)
+- State persistence in localStorage
+- Theme switching (light/dark mode)
 
-### ✨ Бонусные функции
-- ✅ Анимации появления/удаления карточек (Framer Motion)
-- ✅ Drag-and-drop сортировка (@dnd-kit)
-- ✅ Статистика активности за неделю
-- ✅ Экспорт/импорт данных в JSON
+### Bonus Features
+- Card animations (Framer Motion)
+- Drag-and-drop sorting (@dnd-kit) - *under development*
+- Weekly activity statistics
+- Data export/import (JSON format)
 
-## 🛠 Технологии
+## Technology Stack
 
-- **Next.js 15** - React фреймворк
-- **TypeScript** - Типизация
-- **Tailwind CSS 4** - Стилизация
-- **Zustand** - Управление состоянием
-- **Framer Motion** - Анимации
-- **@dnd-kit** - Drag and drop
-- **Shadcn/ui** - UI компоненты
-- **date-fns** - Работа с датами
+- **Next.js 15** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS 4** - Utility-first styling
+- **Zustand** - State management
+- **Framer Motion** - Animations
+- **@dnd-kit** - Drag and drop *(planned)*
+- **Shadcn/ui** - UI component library
+- **date-fns** - Date manipulation
 
-## 🚀 Запуск проекта
+## Installation and Setup
 
+### Prerequisites
+- Node.js 18 or higher
+- Package manager: bun, npm, yarn, or pnpm
+
+### Install Dependencies
+
+#### Using Bun (Recommended)
 ```bash
-# Установка зависимостей
 bun install
-
-# Запуск в режиме разработки
-bun run dev
-
-# Сборка для продакшена
-bun run build
-
-# Запуск продакшен сборки
-bun run start
 ```
 
-Приложение будет доступно по адресу: http://localhost:3000
+#### Using npm
+```bash
+npm install
+```
 
-## 📱 Использование
+### Development Server
 
-### Добавление предложения
-1. Нажмите кнопку "Добавить предложение"
-2. Заполните форму с заголовком, описанием и категорией
-3. Нажмите "Добавить"
+#### Using Bun
+```bash
+bun run dev
+```
 
-### Голосование
-- Используйте кнопки 👍/👎 для голосования за предложения
-- Повторное нажатие отменяет голос
+#### Using npm
+```bash
+npm run dev
+```
 
-### Фильтрация и сортировка
-- **Сортировка**: По дате, популярности или категории
-- **Фильтрация**: По категориям (UI, Performance, Feature, Bug)
+The application will be available at: http://localhost:3000
 
-### Редактирование
-- Нажмите иконку редактирования (✏️) на карточке
-- Измените нужные поля и сохраните
+## Deployment
 
-### Темы
-- Переключайтесь между светлой и темной темой кнопкой 🌙/☀️
+### Vercel (Recommended for Next.js)
+1. Connect your repository to Vercel
+2. Vercel will automatically detect Next.js settings
+3. Deployment occurs automatically on each push
 
-### Drag & Drop
-- Перетаскивайте карточки за иконку ⋮⋮ для изменения порядка
+## Usage Guide
 
-### Статистика
-- Нажмите "Статистика" для просмотра активности за неделю
+### Adding Feedback
+1. Click the "Add Feedback" button
+2. Fill out the form with title, description, and category
+3. Click "Submit" to add the feedback
 
-### Экспорт/Импорт
-- **Экспорт**: Сохраните все данные в JSON файл
-- **Импорт**: Загрузите данные из JSON файла
+### Voting System
+- Use upvote/downvote buttons to vote on feedback items
+- Click again to remove your vote
+- **Use can revote for demonstating purposes**
 
-## 📁 Структура проекта
+### Filtering and Sorting
+- **Sorting**: By date, popularity, or category
+- **Filtering**: By categories (UI, Performance, Feature, Bug)
+
+### Editing Feedback
+- Click the edit icon on any feedback card
+- Modify the required fields and save changes
+
+### Theme Switching
+- Toggle between light and dark themes using the theme button
+
+### Drag & Drop *(Under Development)*
+- Card reordering functionality is temporarily unavailable
+- Implementation planned for future releases
+
+### Statistics
+- Click "Statistics" to view weekly activity overview
+
+### Data Management
+- **Export**: Save all data to a JSON file
+- **Import**: Load data from a JSON file
+
+## Project Structure
 
 ```
 product-feedback-board/
 ├── app/                    # Next.js App Router
-│   ├── globals.css        # Глобальные стили
-│   ├── layout.tsx        # Основной layout
-│   └── page.tsx          # Главная страница
-├── components/            # React компоненты
-│   ├── ui/               # UI компоненты (Shadcn)
-│   ├── FeedbackForm.tsx  # Форма добавления
-│   ├── FeedbackItem.tsx  # Карточка фидбека
-│   ├── FeedbackList.tsx  # Список с drag-and-drop
-│   ├── FeedbackControls.tsx # Фильтры и управление
-│   └── ThemeProvider.tsx # Провайдер темы
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx        # Root layout
+│   └── page.tsx          # Home page
+├── components/            # React components
+│   ├── ui/               # UI components (Shadcn)
+│   ├── FeedbackForm.tsx  # Feedback form
+│   ├── FeedbackItem.tsx  # Feedback card
+│   ├── FeedbackList.tsx  # List with drag-and-drop
+│   ├── FeedbackControls.tsx # Filters and controls
+│   └── ThemeProvider.tsx # Theme provider
 ├── store/                # Zustand stores
-│   └── feedback-store.ts # Основное хранилище
-└── lib/                  # Утилиты
-    └── utils.ts         # Вспомогательные функции
+│   └── feedback-store.ts # Main store
+└── lib/                  # Utilities
+    └── utils.ts         # Helper functions
 ```
 
-## 🎨 Дизайн-система
+## State Architecture
 
-Приложение использует современную дизайн-систему с:
-- Адаптивной версткой для всех устройств
-- Плавными анимациями и переходами
-- Интуитивными иконками (Lucide React)
-- Градиентными кнопками и аккентами
-- Поддержкой темной/светлой темы
+The application demonstrates three levels of state management:
 
-## 🔧 Настройка
-
-Все настройки хранятся в localStorage и включают:
-- Список фидбеков
-- Настройки сортировки и фильтрации
-- Выбранная тема
-- Пользовательские голоса
-
-## 📊 Архитектура состояния
-
-Приложение демонстрирует три уровня управления состоянием:
-
-1. **useState** - Локальное состояние форм
-2. **Zustand** - Глобальное состояние приложения
-3. **Persist middleware** - Сохранение в localStorage
-
-## 🤝 Вклад в проект
-
-Проект создан в образовательных целях для изучения современных паттернов React разработки.
-
-## 📄 Лицензия
-
-MIT License - используйте код свободно для обучения и разработки.
+1. **useState** - Local component state for forms
+2. **Zustand** - Global application state
+3. **Persist middleware** - localStorage persistence
